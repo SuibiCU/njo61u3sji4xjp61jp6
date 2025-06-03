@@ -1,0 +1,242 @@
+\chapter{Proposed Project: HyperVision}
+
+\begin{figure}[ht!]
+    \centering
+
+    % Row 1
+    \begin{minipage}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/HyperVision/Human Transformation.png}
+        
+        \textbf{Human Transformation} \\
+        Prompt: \textit{"Turn people into Joker"}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/HyperVision/ObjectTransformation.png}
+        
+        \textbf{Object Transformation} \\
+        Prompt: \textit{"Electric Metal Guitar"}
+    \end{minipage}
+
+    \vspace{0.5em}
+
+    % Row 2
+    \begin{minipage}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/HyperVision/Scene Transformation.png}
+        
+        \textbf{Scene Transformation} \\
+        Prompt: \textit{"Dali Painting"}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Figures/HyperVision/Haptics Provided.png}
+        
+        \textbf{Interactive Feedback (Haptics)} \\
+        Prompt: \textit{"a RAT"}
+    \end{minipage}
+
+    \caption{
+        Examples of HyperVision’s generative transformations across human, object, and scene perspectives. In each pair, the \textbf{left} image shows the real-time passthrough view from the MR headset; the \textbf{right} image shows the generative result based on user prompts. The final example (bottom-right) demonstrates how haptic feedback is integrated into the transformation experience.
+    }
+    \label{fig:hypervision-modes}
+\end{figure}
+
+
+\section{Overview}
+\textit{HyperVision} is a real-time Mixed Reality (MR) authoring system that integrates generative AI with multimodal spatial interaction. Designed for use with passthrough-enabled MR headsets, the system enables users to transform their physical surroundings through natural input methods, such as voice commands, sketching, and other natural interactions. By overlaying generative content directly onto the live camera feed, HyperVision turns the MR headset into a co-creative interface—enabling dynamic, immersive, and perceptually grounded scene transformation.
+
+This chapter introduces the conceptual foundation, design motivations, system architecture, and evaluation plan for HyperVision. Building on prior work in generative MR systems, it presents HyperVision as a unified platform for exploring new interaction paradigms where AI-generated content is seamlessly embedded into users’ real environments.
+
+
+ \section{Background} % This is a placeholder that needs to be revisited later
+Authoring content in Mixed Reality (MR) has traditionally required technical skills, including 3D modeling, scripting, and interaction programming. These workflows often rely on predefined assets and fixed interaction models, making it difficult for non-experts to rapidly prototype immersive experiences.
+
+Recent advances in generative AI—such as large language models (LLMs), image-to-image diffusion, and 3D content generation—have opened up new opportunities for creative expression. These tools allow users to generate complex digital content from natural input like text or sketches. However, most existing generative systems operate in 2D environments or offline settings, limiting their applicability for real-time, spatially embedded MR authoring.
+
+Prior systems developed in this dissertation—such as \textit{Dream Portal}, which explored voice-based object generation and multi-user prototyping, and \textit{Editing Reality}, which supported sketch-driven spatial editing—demonstrate the creative potential of generative tools in MR. HyperVision builds on these foundations by integrating multimodal interaction with real-time, full-scene transformation. Unlike prior tools focused on discrete object creation or editing, HyperVision treats the MR headset as a generative canvas—merging perception and creation into a unified, immersive experience.
+
+
+
+
+ \section{Motivation}
+Generative AI is reshaping how people create digital content, offering powerful tools for turning natural input—like language or sketches—into images, 3D models, and behaviors. At the same time, Mixed Reality (MR) presents a unique opportunity to embed that generative power into the physical world. However, most MR authoring tools remain technically demanding and rigid, while generative systems often operate outside real-time, spatial contexts. This disconnect limits what users can create—and how they experience it.
+
+This proposal is motivated by a core research question:
+
+\begin{quote}
+\textit{How can generative AI be used in Mixed Reality to help users transform their environment in an intuitive, interactive, and immersive way?}
+\end{quote}
+
+This question builds on a trajectory of prior systems developed in this dissertation—each exploring a different aspect of generative MR interaction.
+
+\textit{Dream Portal} focused on virtual object generation through speech and gesture, using large language models to reason about object placement, behavior, and collaboration in multi-user MR scenes. It demonstrated how users could co-create content in immersive environments using contextual prompts.
+
+\textit{Editing Reality} extended this idea into the physical world. It allowed users to sketch directly onto their surroundings and dynamically erase, retexture, or replace real-world elements. This system emphasized embodied spatial control and direct scene-level transformation.
+
+These two systems represent distinct interaction models:
+Dream Portal enables imaginative construction of virtual content,
+while Editing Reality supports modification of the physical world.
+
+\textit{HyperVision} emerges from the space between them. It aims to unify these approaches into a single system—where users can generate, manipulate, and perceive immersive content in a continuous feedback loop. Rather than overlaying content on top of reality, HyperVision explores MR as perceptual transformation—using generative AI to reshape not just what users build, but how they see and interact with their environment.
+
+By bridging these previous systems, HyperVision opens up new design space for co-creative, spatially grounded, and perceptually integrated MR experiences.
+
+\section{Design Goals}
+
+To respond to the challenges and opportunities outlined above, \textit{HyperVision} is shaped by five core design goals. These goals build on insights from previous systems—\textit{Dream Portal} and \textit{Editing Reality}—while introducing new capabilities that unify generative content creation with real-time perceptual transformation.
+
+\begin{itemize}
+    \item \textbf{Multimodal Interaction.} 
+    Like \textit{Editing Reality}, which supported sketch-based editing, and \textit{Dream Portal}, which used voice and gesture, HyperVision integrates both and extends them further. It allows users to switch fluidly between voice commands, sketches, and spatial gestures—enabling flexible and expressive workflows across modalities.
+
+    \item \textbf{Perspective Transformation.} 
+    \textit{Dream Portal} focused on object-level generation; \textit{Editing Reality} enabled local scene editing. HyperVision expands this by supporting transformations at three perceptual scales: human (e.g., altering facial appearance), object (e.g., modifying form or texture), and scene (e.g., changing global style or ambiance). This broader scope supports a wider range of storytelling and creative applications.
+
+    \item \textbf{Spatial Coherence.} 
+    Prior systems maintained alignment for individual objects or edited surfaces. HyperVision enhances this by anchoring all generative content within the user’s physical space—ensuring consistent scale, occlusion, lighting, and placement. This spatial coherence makes transformations feel immersive and believable.
+
+    \item \textbf{Interactive Feedback and Haptics.} 
+    This is a new capability introduced in HyperVision. While earlier systems focused primarily on visual feedback, HyperVision incorporates optional haptic responses—such as vibration or robotic actuation—to increase embodiment and provide physical feedback during generative interactions.
+
+    \item \textbf{User Control and Targeted Generation.} 
+    Whereas prior systems offered limited control over where and how content was transformed, HyperVision allows users to define specific target areas for generation. This is enabled through sketching, gesture input, or gaze-based selection, which are translated into segmentation masks (e.g., using SAM). This region-based control gives users greater authorship over what is changed and how, supporting localized, intentional transformations.
+\end{itemize}
+
+Together, these goals define a new direction for generative MR authoring—moving from discrete interactions toward a fluid, perceptually grounded, and multi-layered creative experience.
+
+
+
+\begin{figure*}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/HyperVision/HyperVisionArch.png}
+    \caption{System architecture of HyperVision: with local server to host the generative AI pipeline}
+    \label{fig:Arch}
+\end{figure*}
+\section{System}
+
+\textit{HyperVision} is implemented as a real-time MR authoring system running on a Meta Quest Pro headset, wirelessly connected to a local GPU server. The system is designed to support fast, perceptually aligned, and multimodal scene transformation using generative AI. It builds on technical foundations from previous systems—such as behavior scripting from \textit{Dream Portal} and sketch-based editing from \textit{Editing Reality}—but integrates them into a unified, extensible platform for spatial authoring.
+
+\subsection{System Architecture}
+
+The HyperVision architecture consists of four main components:
+
+\begin{enumerate}
+    \item \textbf{Passthrough Video Capture} — The headset’s stereoscopic cameras continuously stream a live view of the physical environment. This feed serves as the visual context for all generative operations.
+
+    \item \textbf{Multimodal Input Layer} — Users can issue commands via speech, draw directly in 3D space, or point to targets using hand or gaze tracking. These inputs are processed in real time to define user intent and target regions for generation.
+
+    \item \textbf{Generative Engine (Server-Side)} — Prompts and region masks are sent to a local GPU server, where they are processed by a generative AI pipeline. This includes a language model for semantic understanding, the \textbf{StreamDiffusion} model for real-time visual generation, and the \textbf{Segment Anything Model (SAM)} for extracting target regions based on sketch, hand, or gaze input.
+
+    \item \textbf{Visual Overlay and Scene Update} — The generated content is composited back into the passthrough view on the headset using Unity’s Universal Render Pipeline (URP). Content is spatially anchored using AR Foundation so that it appears stable and aligned with the real world.
+\end{enumerate}
+
+This modular design supports real-time interaction with minimal latency, while remaining extensible for future upgrades to models or input methods.
+
+\subsection{Generative Pipeline}
+
+The generative process begins when the user provides an input—such as saying, “make this look like a jungle,” or sketching around an object. This input defines both the intent and the target area for generation.
+
+The system then:
+\begin{itemize}
+    \item Encodes the prompt using a tuned language model to form a semantic embedding.
+    \item Uses hand, gaze, or sketch input to identify the spatial target area, with segmentation powered by the \textbf{Segment Anything Model (SAM)}.
+    \item Sends both the semantic prompt and the segmented region to the \textbf{StreamDiffusion} model, which generates context-aware visual output in real time.
+    \item Composites the generated content into the headset's passthrough feed, aligned with the original view.
+\end{itemize}
+
+Because the pipeline is modular, HyperVision supports both local edits and full-scene transformations. All results are grounded in the live video stream, ensuring that generated content appears spatially coherent and perceptually believable.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth]{Figures/HyperVision/HyperVisionPipeline (1).png}
+    \caption{Generative Pipeline of HyperVision: A unified pipeline that builds on prior work and enables real-time, multimodal, and spatially anchored MR generation.}
+    \label{fig:Pipeline}
+\end{figure}
+
+
+
+\subsection{Example Walkthrough}
+
+To illustrate how HyperVision works in practice, we present four example scenarios demonstrating transformations at different perceptual levels: human, object, scene, and interactive feedback.
+
+\begin{itemize}
+    \item \textbf{Human Transformation:} A user points to a person in the scene and says, “Turn people into Joker.” HyperVision uses the headset’s gaze tracking to define the target region, applies segmentation via SAM, and streams a facial style transfer through StreamDiffusion. The result overlays a Joker-like appearance onto the individual’s face in real time.
+
+    \item \textbf{Object Transformation:} The user gestures at a nearby guitar prop and says, “Electric metal guitar.” The object is segmented, and HyperVision generates a high-frequency texture and geometric enhancements to match the metal guitar concept. The transformed object appears with updated reflectance and geometry directly on the prop’s surface.
+
+    \item \textbf{Scene Transformation:} The user issues a global prompt, “Make this space look like a Dali painting.” HyperVision applies style transfer across the entire passthrough feed, warping background textures and colors to produce a surrealist scene, maintaining alignment across surfaces and objects.
+
+    \item \textbf{Interactive Feedback (Haptics):} The user sketches around a clay figurine and says, “Make this a rat.” HyperVision transforms the visual appearance using generative overlays and triggers a robotic haptic module to simulate motion or vibration when the user reaches toward the object.
+\end{itemize}
+
+Figure~\ref{fig:hypervision-modes} shows example visual outputs corresponding to each transformation type. These examples demonstrate how users can fluidly generate targeted, multimodal changes within a spatial MR environment.
+
+
+\section{Study Plan}
+
+To investigate how HyperVision supports intuitive, interactive, and immersive scene transformation, we plan an early-stage user study. This study explores how participants engage with HyperVision’s features—such as multimodal input, region-based generation, and real-time visual feedback—while completing creative MR tasks.
+
+This study builds directly on our core research question:
+
+\begin{quote}
+\textit{How can generative AI be used in Mixed Reality to help users transform their environment in an intuitive, interactive, and immersive way?}
+\end{quote}
+
+\subsection{Objectives}
+
+We focus on three key aspects of the user experience:
+
+\begin{itemize}
+    \item \textbf{Usability} — How easily can users understand and operate HyperVision’s interface? We will assess this by observing how participants interact with voice, sketch, and gaze input, and whether they can efficiently complete tasks after a short introduction. Learnability is a key part of this—how quickly users become confident using the system.
+
+    \item \textbf{Authorial Control} — Do users feel they are shaping the outcome of the generative process? We will evaluate this based on how well users can define targets, refine results, and express creative intent. This includes both self-reported ratings and behavioral indicators of control and iteration.
+
+    \item \textbf{Spatial Coherence and Immersion} — How integrated and believable are the generative overlays within the real-world scene? We will assess user perceptions of realism, spatial consistency, and sense of presence.
+\end{itemize}
+
+\subsection{Procedure}
+
+Participants will complete both structured and open-ended MR creation tasks using HyperVision. Tasks will include object transformation, localized sketch-based edits, and full-scene style changes. Users will combine different input modalities to complete these tasks.
+
+After the session, participants will complete standard questionnaires (e.g., System Usability Scale, Creativity Support Index, and a spatial presence scale) and participate in a short interview about their experience, including what felt intuitive, surprising, or frustrating. We will analyze qualitative data using thematic coding to identify patterns in user feedback.
+
+\subsection{Participants}
+
+We plan to recruit 6 to 8 participants with varied backgrounds in MR, creative design, or prototyping. This focused sample aligns with formative HCI methods for evaluating early-stage systems.
+
+\subsection{Expected Outcomes}
+
+The study will provide insights into how users learn and adapt to HyperVision’s workflow, whether they feel empowered to direct the transformation process, and how they interpret the spatial integration of generated content. These findings will inform future improvements to the system and contribute to design knowledge about generative interaction in MR.
+
+
+
+\section{Contributions}
+
+This proposed work contributes to the fields of Human–Computer Interaction, Mixed Reality, and Generative AI through the design, implementation, and evaluation of \textit{HyperVision}. The system and accompanying study aim to advance how users create and perceive generative content within spatial, embodied environments.
+
+Specifically, the contributions of this research include:
+
+\begin{itemize}
+    \item \textbf{A unified system for perceptually grounded generative MR} \\
+    HyperVision integrates real-time generative overlays with multimodal input (voice, sketch, and gesture), allowing users to transform their physical surroundings through intuitive, iterative interactions.
+
+    \item \textbf{A design framework for prompt-driven, spatial generation} \\
+    The system builds on prior work to define a new interaction model where generative AI operates on live visual input and user-defined regions, using spatial anchoring and segmentation to maintain coherence with the real world.
+
+    \item \textbf{An early-stage evaluation of co-creative MR workflows} \\
+    Through a mixed-methods user study, this research provides empirical insights into how users perceive control, usability, and spatial realism when working with generative MR tools.
+
+    \item \textbf{Design principles for authoring in generative spatial systems} \\
+    Based on observations and participant feedback, the study will surface actionable design recommendations for creating future MR systems that support creative control, perceptual integration, and multimodal authoring.
+\end{itemize}
+
+
+\section{Conclusion}
+
+\textit{HyperVision} explores a new paradigm for creative interaction in Mixed Reality by combining generative AI with real-time, spatially grounded user input. Building on prior work in voice-based generation and spatial editing, it unifies these capabilities into a system that allows users to transform their environment using multimodal prompts and intuitive controls fluidly.
+
+Through the proposed implementation and early-stage user study, this research will contribute technical, experiential, and design insights into how generative tools can support real-time creativity, authorial control, and perceptual coherence in immersive spaces. Ultimately, \textit{HyperVision} aims to serve as both a functional system and a design probe for understanding the future of co-creative mixed reality.
